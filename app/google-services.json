@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "736706507144",
+    "project_id": "ecoxchange-36f8d",
+    "storage_bucket": "ecoxchange-36f8d.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:736706507144:android:657b70c35a20360a534a3d",
+        "android_client_info": {
+          "package_name": "com.example.ecoxchange"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDFwyMX2hukvu1TWRRuJhz97wp9TN53WgA"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
