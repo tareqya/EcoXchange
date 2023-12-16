@@ -74,7 +74,7 @@
         android:layout_centerHorizontal="true"
         />
 
-    <com.google.android.material.progressindicator.CircularProgressIndicator
+    <ProgressBar
         android:id="@+id/login_PB_loading"
         android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true"

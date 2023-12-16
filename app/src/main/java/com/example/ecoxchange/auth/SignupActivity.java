@@ -5,11 +5,15 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ProgressBar;
 import android.widget.Toast;
 
-import com.example.ecoxchange.AuthCallBack;
+import com.example.ecoxchange.callback.AuthCallBack;
 import com.example.ecoxchange.R;
+import com.example.ecoxchange.callback.UserCallBack;
 import com.example.ecoxchange.controllers.AuthController;
+import com.example.ecoxchange.controllers.UserController;
+import com.example.ecoxchange.database.User;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.progressindicator.CircularProgressIndicator;
 import com.google.android.material.textfield.TextInputLayout;
@@ -23,11 +27,9 @@ public class SignupActivity extends AppCompatActivity {
     private TextInputLayout signup_TF_password;
     private TextInputLayout signup_TF_confirmPassword;
     private Button signup_BTN_createAccount;
-
-    private CircularProgressIndicator signup_PB_loading;
-
+    private ProgressBar signup_PB_loading;
     private AuthController authController;
-
+    private UserController userController;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -53,15 +55,54 @@ public class SignupActivity extends AppCompatActivity {
         authController.setAuthCallBack(new AuthCallBack() {
             @Override
             public void onCreateAccountComplete(Task<AuthResult> task) {
-                //
                 if(task.isSuccessful()){
-                    Toast.makeText(SignupActivity.this, "Account created successfully", Toast.LENGTH_SHORT).show();
+                    String firstName = signup_TF_firstName.getEditText().getText().toString();
+                    String lastName = signup_TF_lastName.getEditText().getText().toString();
+                    String email = signup_TF_email.getEditText().getText().toString();
+                    String phone = signup_TF_phone.getEditText().getText().toString();
+                    String uid = authController.getCurrentUser().getUid();
+                    User user = new User()
+                            .setEmail(email)
+                            .setFirstName(firstName)
+                            .setLastName(lastName)
+                            .setPhone(phone);
+                    user.setKey(uid);
+
+                    userController.saveUser(user);
                 }else{
                     String error = task.getException().getMessage().toString();
                     Toast.makeText(SignupActivity.this, error, Toast.LENGTH_SHORT).show();
                 }
             }
+
+            @Override
+            public void onLoginComplete(Task<AuthResult> task) {
+
+            }
         });
+
+        userController = new UserController();
+        userController.setUserCallBack(new UserCallBack() {
+            @Override
+            public void onSaveUserComplete(Task<Void> task) {
+                signup_PB_loading.setVisibility(View.INVISIBLE);
+                if(task.isSuccessful()){
+                    Toast.makeText(SignupActivity.this, "Account created successfully", Toast.LENGTH_SHORT).show();
+                    authController.logout();
+                    finish();
+                }else{
+                    String error = task.getException().getMessage().toString();
+                    Toast.makeText(SignupActivity.this, error, Toast.LENGTH_SHORT).show();
+                }
+
+            }
+
+            @Override
+            public void onFetchUserComplete(User user) {
+
+            }
+        });
+
         signup_BTN_createAccount.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -79,6 +120,7 @@ public class SignupActivity extends AppCompatActivity {
                 String password = signup_TF_password.getEditText().getText().toString();
                 AuthUser authUser = new AuthUser(email, password);
                 authController.createAccount(authUser);
+                signup_PB_loading.setVisibility(View.VISIBLE);
             }
         });
     }

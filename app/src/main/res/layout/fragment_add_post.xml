@@ -70,7 +70,7 @@
         android:text="Add Post"
         />
 
-    <com.google.android.material.progressindicator.CircularProgressIndicator
+    <ProgressBar
         android:id="@+id/fAddPost_PB_loading"
         android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true"
