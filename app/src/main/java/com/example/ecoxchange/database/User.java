@@ -2,7 +2,9 @@ package com.example.ecoxchange.database;
 
 import com.google.firebase.firestore.Exclude;
 
-public class User extends FirebaseKey{
+import java.io.Serializable;
+
+public class User extends FirebaseKey implements Serializable {
     private String firstName;
     private String lastName;
     private String email;

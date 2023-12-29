@@ -29,16 +29,23 @@ import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import com.example.ecoxchange.R;
+import com.example.ecoxchange.callback.PostCallBack;
 import com.example.ecoxchange.controllers.AuthController;
+import com.example.ecoxchange.controllers.PostController;
+import com.example.ecoxchange.controllers.StorageController;
 import com.example.ecoxchange.database.Post;
 import com.example.ecoxchange.utils.Generic;
+import com.google.android.gms.tasks.Task;
 import com.google.android.material.textfield.TextInputLayout;
 
 import java.io.FileNotFoundException;
 import java.io.InputStream;
+import java.util.ArrayList;
+import java.util.Date;
 
 
 public class AddPostFragment extends Fragment {
+    public static final String POSTS_IMAGES = "Posts";
 
     private Activity activity;
     private TextInputLayout fAddPost_TF_title;
@@ -48,10 +55,12 @@ public class AddPostFragment extends Fragment {
     private ProgressBar fAddPost_PB_loading;
     private Uri selectedImageUri;
     private boolean permissions;
+    private PostController postController;
 
     public AddPostFragment(Activity activity) {
         this.activity = activity;
         this.permissions = false;
+        postController = new PostController();
     }
 
     @Override
@@ -65,18 +74,52 @@ public class AddPostFragment extends Fragment {
     }
 
     private void initVars() {
+        postController.setPostCallBack(new PostCallBack() {
+            @Override
+            public void onPostSaveComplete(Task<Void> task) {
+                if(task.isSuccessful()){
+                    Toast.makeText(activity, "Post uploaded successfully", Toast.LENGTH_SHORT).show();
+                    fAddPost_TF_title.getEditText().setText("");
+                    fAddPost_TF_description.getEditText().setText("");
+                    selectedImageUri = null;
+                    fAddPost_IV_photo.setImageResource(R.drawable.baseline_add_photo_alternate_24);
+
+                }else{
+                    String err = task.getException().getMessage().toString();
+                    Toast.makeText(activity, err, Toast.LENGTH_SHORT).show();
+                }
+            }
+
+            @Override
+            public void onPostsFetchComplete(ArrayList<Post> posts) {
+
+            }
+        });
 
         fAddPost_BTN_addPost.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 // upload new post
+                if(!checkInput()) return;
+
                 AuthController authController = new AuthController();
                 String uid =  authController.getCurrentUser().getUid();
-                if(!checkInput()) return;
-                Post p = new Post()
-                        .setUserId(uid)
-                        .setDescription("")
-                        .setTitle("");
+                String title = fAddPost_TF_title.getEditText().getText().toString();
+                String description = fAddPost_TF_description.getEditText().getText().toString();
+
+                String ext = Generic.getFileExtension(activity, selectedImageUri);
+                String imagePath = POSTS_IMAGES + "/" + Generic.generateRandomString(10) + "." + ext;
+
+                StorageController storageController = new StorageController();
+                if(storageController.uploadImage(selectedImageUri, imagePath)){
+                    Post p = new Post()
+                            .setUserId(uid)
+                            .setDescription(description)
+                            .setTitle(title)
+                            .setImagePath(imagePath)
+                            .setPhone(ProfileFragment.currentUser.getPhone());
+                    postController.savePost(p);
+                }
             }
         });
 

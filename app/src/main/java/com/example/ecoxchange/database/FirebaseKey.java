@@ -2,7 +2,9 @@ package com.example.ecoxchange.database;
 
 import com.google.firebase.firestore.Exclude;
 
-public class FirebaseKey {
+import java.io.Serializable;
+
+public class FirebaseKey implements Serializable {
     protected String key;
 
     public FirebaseKey(){}

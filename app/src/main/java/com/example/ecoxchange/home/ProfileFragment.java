@@ -32,9 +32,9 @@ public class ProfileFragment extends Fragment {
     private CardView fProfile_CV_editDetails;
     private CardView fProfile_CV_posts;
     private CardView fProfile_CV_logout;
-
     private AuthController authController;
     private UserController userController;
+    public static User currentUser;
 
     public ProfileFragment(Activity activity) {
         this.activity = activity;
@@ -71,6 +71,7 @@ public class ProfileFragment extends Fragment {
                             .placeholder(R.drawable.profile)
                             .into(fProfile_IV_profileImage);
                 }
+                currentUser = user;
             }
         });
         fProfile_CV_logout.setOnClickListener(new View.OnClickListener() {
@@ -83,6 +84,21 @@ public class ProfileFragment extends Fragment {
             }
         });
 
+        fProfile_CV_posts.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+            }
+        });
+
+        fProfile_CV_editDetails.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(activity, UpdateAccountActivity.class);
+                intent.putExtra("USER", currentUser);
+                startActivity(intent);
+            }
+        });
         String uid = authController.getCurrentUser().getUid();
         userController.fetchUserData(uid);
     }
@@ -94,6 +110,5 @@ public class ProfileFragment extends Fragment {
         fProfile_CV_posts = view.findViewById(R.id.fProfile_CV_posts);
         fProfile_CV_logout = view.findViewById(R.id.fProfile_CV_logout);
     }
-
 
 }

@@ -2,14 +2,20 @@ package com.example.ecoxchange.database;
 
 import com.google.firebase.firestore.Exclude;
 
+import java.util.Date;
+
 public class Post extends FirebaseKey{
     private String title;
     private String description;
     private String imagePath;
     private String imageUrl;
     private String userId;
+    private String phone;
+    private Date date;
 
-    public Post() {}
+    public Post() {
+        date = new Date();
+    }
 
     public String getTitle() {
         return title;
@@ -55,5 +61,23 @@ public class Post extends FirebaseKey{
     public Post setUserId(String userId) {
         this.userId = userId;
         return this;
+    }
+
+    public Post setPhone(String phone) {
+        this.phone = phone;
+        return this;
+    }
+
+    public String getPhone() {
+        return phone;
+    }
+
+    public Post setDate(Date date) {
+        this.date = date;
+        return this;
+    }
+
+    public Date getDate() {
+        return date;
     }
 }

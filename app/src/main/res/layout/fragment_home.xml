@@ -26,6 +26,7 @@
     </com.google.android.material.textfield.TextInputLayout>
 
     <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/fHome_RV_posts"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_below="@+id/fHome_TF_search"
