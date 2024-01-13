@@ -51,6 +51,7 @@ public class PostController {
                         Post post =  documentSnapshot.toObject(Post.class);
                         String imageUrl = storageController.getDownloadUrl(post.getImagePath());
                         post.setImageUrl(imageUrl);
+                        post.setKey(documentSnapshot.getId());
                         posts.add(post);
                     }
                 }
@@ -60,6 +61,28 @@ public class PostController {
     }
 
     public void fetchUserPosts(String uid){
+        db.collection(POSTS_TABLE)
+                .whereEqualTo("userId", uid)
+                .addSnapshotListener(new EventListener<QuerySnapshot>() {
+                    @Override
+                    public void onEvent(@Nullable QuerySnapshot value, @Nullable FirebaseFirestoreException error) {
+                        ArrayList<Post> posts = new ArrayList<>();
+                        if(value != null){
+                            StorageController storageController = new StorageController();
+                            for(DocumentSnapshot documentSnapshot : value.getDocuments()) {
+                                Post post =  documentSnapshot.toObject(Post.class);
+                                String imageUrl = storageController.getDownloadUrl(post.getImagePath());
+                                post.setImageUrl(imageUrl);
+                                post.setKey(documentSnapshot.getId());
+                                posts.add(post);
+                            }
+                        }
+                        postCallBack.onPostsFetchComplete(posts);
+                    }
+                });
+    }
 
+    public void removePost(Post post) {
+        this.db.collection(POSTS_TABLE).document(post.getKey()).delete();
     }
 }

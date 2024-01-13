@@ -87,7 +87,8 @@ public class ProfileFragment extends Fragment {
         fProfile_CV_posts.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
+                Intent intent = new Intent(activity, MyPostsActivity.class);
+                startActivity(intent);
             }
         });
 

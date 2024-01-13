@@ -16,6 +16,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
 import com.example.ecoxchange.R;
+import com.example.ecoxchange.callback.PostListener;
 import com.example.ecoxchange.database.Post;
 
 import java.util.ArrayList;
@@ -24,12 +25,15 @@ public class PostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>{
 
     private Activity activity;
     private ArrayList<Post> posts = new ArrayList<>();
-
+    private PostListener postListener;
     public PostAdapter(Activity activity, ArrayList<Post> posts){
         this.posts = posts;
         this.activity = activity;
     }
 
+    public void setPostListener(PostListener postListener){
+        this.postListener = postListener;
+    }
     public void setPosts(ArrayList<Post> posts){
         this.posts = posts;
     }
@@ -86,6 +90,17 @@ public class PostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>{
                     intent.setData(Uri.parse("tel:" + post.getPhone()));
                     activity.startActivity(intent);
 
+                }
+            });
+
+            itemView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    int i = getLayoutPosition();
+                    Post post = posts.get(i);
+                    if(postListener != null){
+                        postListener.onClick(post, i);
+                    }
                 }
             });
         }

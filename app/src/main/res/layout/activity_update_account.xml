@@ -106,46 +106,16 @@
 
     </com.google.android.material.textfield.TextInputLayout>
 
-    <com.google.android.material.textfield.TextInputLayout
-        android:id="@+id/updateAccount_TF_password"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/updateAccount_TF_phone"
-        android:layout_marginTop="10dp"
-        android:layout_marginHorizontal="10dp"
-        android:hint="Password"
-        app:endIconMode="password_toggle"
-        >
-
-        <com.google.android.material.textfield.TextInputEditText
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:inputType="textPassword"
-            />
-
-    </com.google.android.material.textfield.TextInputLayout>
-
 
     <Button
         android:id="@+id/updateAccount_BTN_createAccount"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:width="200dp"
-        android:layout_below="@+id/updateAccount_TF_password"
+        android:layout_below="@+id/updateAccount_TF_phone"
         android:layout_marginTop="20dp"
         android:layout_centerHorizontal="true"
         android:text="Update Account"
         />
-
-    <com.google.android.material.progressindicator.CircularProgressIndicator
-        android:id="@+id/updateAccount_PB_loading"
-        android:layout_alignParentBottom="true"
-        android:layout_centerHorizontal="true"
-        android:layout_marginBottom="20dp"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:visibility="invisible"
-        />
-
 
 </RelativeLayout>
